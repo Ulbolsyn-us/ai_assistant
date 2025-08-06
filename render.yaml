@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: ai-assistant-api
+    runtime: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "uvicorn app.main:app --host 0.0.0.0 --port 8000"
+    envVars:
+      - key: OPENROUTER_API_KEY
+        value: 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
+      - key: TELEGRAM_BOT_TOKEN
+        value: 7812267584:AAG4185qlqGtNEFDkSlZKlszcVbSAhmd_Qo
+      - key: DATABASE_URL
+        value: "sqlite:///./test.db"
