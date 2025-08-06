@@ -2,7 +2,6 @@ from fastapi import Depends
 from sqlalchemy.orm import Session
 from app.db.session import get_db
 from app.api.models import Template
-from app.db.session import SessionLocal
 
 
 def get_template_by_name(name: str, db: Session = Depends(get_db)) -> str:

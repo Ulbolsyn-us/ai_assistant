@@ -2,20 +2,13 @@ from fastapi import APIRouter, Depends
 from app.db.schemas import ChatRequest, ChatResponse
 from app.services.gpt_utils import ask_gpt
 from sqlalchemy.orm import Session
-from app.db.session import SessionLocal
+from app.db.session import get_db
 from app.api.models import Message
 from app.services.nlp_utils import is_relevant_to_business
 from app.api.templates import get_template_by_name
 
 
 router = APIRouter()
-
-def get_db():
-    db = SessionLocal()
-    try: 
-        yield db
-    finally:
-        db.close()
         
 def should_escalate(reply: str) -> bool:
     reply = reply.lower()

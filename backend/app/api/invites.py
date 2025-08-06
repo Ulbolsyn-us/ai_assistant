@@ -77,4 +77,4 @@ def export_invites_csv(db: Session = Depends(get_db)):
     output.seek(0)
     return StreamingResponse(output, media_type="text/csv", headers={
         "Content-Disposition": "attachment; filename=invites.csv"
-    })
+    }) 
