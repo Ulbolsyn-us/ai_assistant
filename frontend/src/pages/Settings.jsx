@@ -1,0 +1,17 @@
+function Settings() {
+    return (
+        <div className="m-12">
+            <h2 className="hd p-0">⚙️ Настройки</h2>
+            <p className="my-4">Здесь будут настройки бота...</p>
+            <button className="py-2.5 px-5 me-2 mb-2 flex items-center text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-4">
+  <path strokeLinecap="round" strokeLinejoin="round" d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5" />
+</svg>
+
+                <a href="/" className="pl-2">Назад в главный меню</a>
+            </button>
+        </div>
+    );
+}
+
+export default Settings;

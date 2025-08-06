@@ -1,0 +1,31 @@
+@import "tailwindcss";
+body {
+    background-color: #C1DDE8;
+}
+.hd {
+    color: black;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-weight: 550;
+    font-size: 40px;
+    
+}
+
+.li-m {
+    margin-bottom: 20px;
+    font-size: 21px;
+    font-family:Georgia, 'Times New Roman', Times, serif;
+    font-weight: 550;
+}
+
+.nav {
+    width: 450px;
+    align-items: center;
+}
+
+.nav:hover {
+    border: 0px solid;
+    border-radius: 10px;
+    background-color: #6DAAC2;
+    transition: background-color 0.3s ease;
+    transition-delay: 0.2s;
+}
