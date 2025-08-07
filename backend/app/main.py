@@ -8,14 +8,6 @@ from backend.app.db.init_templates import init_templates
 from backend.app.api.hr_inbox import router as hrinbox_router
 from backend.app.api.invites import router as interview_invite
 
-if __name__ == "__main__":
-    import asyncio
-    asyncio.run(start_bot())
-
-init_db()
-init_templates()
-
-
 app = FastAPI()
 
 app.include_router(chat_router)
@@ -30,3 +22,19 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+def startup():
+    init_db()
+    init_templates()
+    import asyncio
+    asyncio.run(start_bot())
+
+
+if __name__ == "__main__":
+    startup()
+
+
+
+
+
+
