@@ -4,8 +4,8 @@ import csv
 from sqlalchemy.orm import Session
 from typing import Optional
 from datetime import datetime, timedelta
-from app.api.models import InterviewInvite
-from app.db.session import get_db
+from backend.app.api.models import InterviewInvite
+from backend.app.db.session import get_db
 from io import StringIO
 
 

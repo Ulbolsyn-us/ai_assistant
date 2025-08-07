@@ -9,10 +9,10 @@ from telegram.ext import (
     CallbackQueryHandler, 
     filters) # обработчик сообщений (MessageHandler) / обработчик callback-кнопок (CallbackQueryHandler) — для ответа на нажатие.
 from dotenv import load_dotenv
-from app.api.models import Message, InterviewInvite
-from app.db.session import get_db
+from backend.app.api.models import Message, InterviewInvite
+from backend.app.db.session import get_db
 import httpx
-from app.api.templates import get_template_by_name
+from backend.app.api.templates import get_template_by_name
 
 
 load_dotenv()

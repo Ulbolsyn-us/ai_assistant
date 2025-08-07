@@ -1,5 +1,5 @@
-from app.api.models import Template
-from app.db.session import SessionLocal
+from backend.app.api.models import Template
+from backend.app.db.session import SessionLocal
 
 default_templates = {
     "needs_operator": "❗️Сейчас я передам ваш вопрос оператору. Ожидайте, пожалуйста.",
