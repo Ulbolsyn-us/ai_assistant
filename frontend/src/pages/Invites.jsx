@@ -28,7 +28,7 @@ function Invites() {
     const handleDelete = async (id) => {
         if (!window.confirm("Удалить это приглашение?")) return;
         try {
-            await axios.delete(`http://localhost:8000/invites/${id}`);
+            await axios.delete(`${process.env.VITE_API_URL}/invites/${id}`);
             fetchInvites();
         } catch (err) {
             console.error("Ошибка при удалении:", err)

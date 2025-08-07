@@ -7,7 +7,7 @@ function MessageList() {
     useEffect(() => {
         async function fetchMessages() {
             try {
-                const res = await axios.get("/messages");
+                const res = await axios.get(`${process.env.VITE_API_URL}/messages`);
                 setMessages(res.data);
             } catch (error) {
                 console.error("Ошибка при загрузке сообщений:", error);
