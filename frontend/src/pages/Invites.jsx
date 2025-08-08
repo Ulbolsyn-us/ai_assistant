@@ -17,7 +17,7 @@ function Invites() {
             if (filterUserId) params.user_id = filterUserId;
             if (filterDate) params.date = filterDate;
 
-            const res = await axios.get("http://localhost:8000/invites", { params });
+            const res = await axios.get(`${import.meta.env.VITE_API_URL}/invites`, { params });
             setInvites(res.data);
             setLoading(false);
         } catch (err) {
@@ -28,7 +28,7 @@ function Invites() {
     const handleDelete = async (id) => {
         if (!window.confirm("Удалить это приглашение?")) return;
         try {
-            await axios.delete(`${process.env.VITE_API_URL}/invites/${id}`);
+            await axios.delete(`${import.meta.env.VITE_API_URL}/invites/${id}`);
             fetchInvites();
         } catch (err) {
             console.error("Ошибка при удалении:", err)
@@ -79,7 +79,7 @@ function Invites() {
                     </tbody>
                 </table>
             </div>
-            <div className="py-2.5 mb-2"><a href="http://localhost:8000/invites/export/csv" target="_blank" className="bg-gray-600 text-white px-4 py-2 rounded ">
+            <div className="py-2.5 mb-2"><a href="${import.meta.env.VITE_API_URL}/invites/export/csv" target="_blank" className="bg-gray-600 text-white px-4 py-2 rounded ">
   📤 Экспорт CSV</a></div>
             <button className="py-2.5 px-5 me-2 mb-2 flex items-center text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-4">

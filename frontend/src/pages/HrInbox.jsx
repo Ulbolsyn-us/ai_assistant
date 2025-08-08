@@ -11,7 +11,7 @@ function HrInbox() {
 
     const fetchHrInbox = async () => {
         try {
-            const res = await axios.get(`${process.env.VITE_API_URL}/hr-inbox`);
+            const res = await axios.get(`${import.meta.env.VITE_API_URL}/hr-inbox`);
             setHrInbox(res.data);
             setLoading(false);
         } catch (err) {

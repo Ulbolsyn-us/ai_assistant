@@ -11,7 +11,7 @@ function Templates() {
 
     const fetchTemplates = async () => {
         try {
-            const res = await axios.get(`${process.env.VITE_API_URL}/templates`);
+            const res = await axios.get(`${import.meta.env.VITE_API_URL}/templates`);
             setTemplates(res.data);
             setLoading(false);
         } catch (err) {
@@ -27,7 +27,7 @@ function Templates() {
 
     const handleSave = async (template) => {
         try {
-            await axios.put(`${process.env.VITE_API_URL}/templates/${template.id}`, {
+            await axios.put(`${import.meta.env.VITE_API_URL}/templates/${template.id}`, {
                 content: template.content,
             });
             alert("✅ Сохранено!")
