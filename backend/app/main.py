@@ -23,15 +23,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-def startup():
+@app.on_event("startup")
+async def on_startup():
     init_db()
     init_templates()
-    import asyncio
-    asyncio.run(start_bot())
-
-
-if __name__ == "__main__":
-    startup()
+    await start_bot()
 
 
 
