@@ -101,15 +101,16 @@ async def handle_button_click(update: Update, context: ContextTypes.DEFAULT_TYPE
 async def start_bot():
     await application.initialize()
     await application.start()
-    await application.updater.start_polling
-    
-    print("Telegram бот запущен")
+    await application.bot.set_my_commands([
+        ("start", "Запустить бота")
+    ])
+    await application.run_polling()
 
     
     
-if __name__ == "__main__":
-    import asyncio
-    asyncio.run(start_bot())
+# if __name__ == "__main__":
+#     import asyncio
+#     asyncio.run(start_bot())
     
     
 print("✅ Бот стартует...")
