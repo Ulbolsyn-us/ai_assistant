@@ -106,7 +106,12 @@ async def start_bot():
         ("start", "Запустить бота")
     ])
     await application.bot.delete_webhook(drop_pending_updates=True)
-    asyncio.create_task(application.run_polling(stop_signals=None))
+
+    print("✅ Бот запущен (Render)")
+
+    # Запускаем получение апдейтов без закрытия event loop
+    # и без попытки управлять основным циклом Uvicorn
+    asyncio.create_task(application.updater.start_polling())
 
     
     
