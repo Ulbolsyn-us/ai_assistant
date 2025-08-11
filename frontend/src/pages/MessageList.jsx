@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "../api/api";
+import axios from "axios";
 
 function MessageList() {
     const [ messages, setMessages ] = useState([]);

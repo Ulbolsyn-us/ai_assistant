@@ -6,6 +6,7 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
     Application,
     ApplicationBuilder, 
+    CommandHandler,
     ContextTypes, 
     MessageHandler, 
     CallbackQueryHandler, 
@@ -25,6 +26,17 @@ application = Application.builder().token("7812267584:AAG4185qlqGtNEFDkSlZKlszcV
 
 
 # 🟡 Функция обработки входящих сообщений
+
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(
+        "👋 Привет! Я твой HR-ассистент.\n\n"
+        "Я могу ответить на вопросы, касающиеся работы:\n"
+        "• Доступные вакансии\n"
+        "• Процесс оформления и собеседования\n"
+        "✏ Просто напишите ваш вопрос, например:\n"
+        "➡ Какие вакансии сейчас открыты?\n"
+        "➡ Как подать резюме?\n"
+    )
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE, db: Session = Depends(get_db)):
     if update.message is None or update.message.text is None:
@@ -106,8 +118,10 @@ async def start_bot():
         ("start", "Запустить бота")
     ])
     await application.bot.delete_webhook(drop_pending_updates=True)
-
-    print("✅ Бот запущен (Render)")
+    
+    application.add_handler(CommandHandler("start", start))  # 🟢 Добавили приветствие
+    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
+    application.add_handler(CallbackQueryHandler(handle_button_click))
 
     # Запускаем получение апдейтов без закрытия event loop
     # и без попытки управлять основным циклом Uvicorn
