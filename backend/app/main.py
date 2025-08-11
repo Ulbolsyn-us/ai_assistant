@@ -28,7 +28,7 @@ app.add_middleware(
 async def on_startup():
     init_db()
     init_templates()
-    asyncio.create_task(start_bot)
+    asyncio.create_task(start_bot())
 
 
 
