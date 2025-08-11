@@ -21,21 +21,18 @@ from backend.app.api.templates import get_template_by_name
 load_dotenv()
 
 BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+WEBHOOK_URL = os.getenv("WEBHOOK_URL") 
 
-application = Application.builder().token("7812267584:AAG4185qlqGtNEFDkSlZKlszcVbSAhmd_Qo").build()
+application = Application.builder().token(BOT_TOKEN).build()
 
 
 # 🟡 Функция обработки входящих сообщений
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        "👋 Привет! Я твой HR-ассистент.\n\n"
-        "Я могу ответить на вопросы, касающиеся работы:\n"
-        "• Доступные вакансии\n"
-        "• Процесс оформления и собеседования\n"
-        "✏ Просто напишите ваш вопрос, например:\n"
-        "➡ Какие вакансии сейчас открыты?\n"
-        "➡ Как подать резюме?\n"
+        "👋 Привет! Я HR-ассистент.\n\n"
+        "Задай вопрос о вакансии, собеседовании или процессе найма.\n"
+        "Например: 'Хочу записаться на собеседование'."
     )
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE, db: Session = Depends(get_db)):
@@ -111,23 +108,19 @@ async def handle_button_click(update: Update, context: ContextTypes.DEFAULT_TYPE
     # Здесь можно сохранить в БД таблицу подтверждений (если нужно)
     await query.edit_message_text("Спасибо, участие подтверждено!")
     
-async def start_bot():
-    await application.initialize()
-    await application.start()
-    await application.bot.set_my_commands([
-        ("start", "Запустить бота")
-    ])
-    await application.bot.delete_webhook(drop_pending_updates=True)
-    
-    application.add_handler(CommandHandler("start", start))  # 🟢 Добавили приветствие
+def setup_bot_handlers():
+    application.add_handler(CommandHandler("start", start))
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
-    application.add_handler(CallbackQueryHandler(handle_button_click))
-
-    # Запускаем получение апдейтов без закрытия event loop
-    # и без попытки управлять основным циклом Uvicorn
-    asyncio.create_task(application.updater.start_polling())
-
     
+async def start_bot():
+    setup_bot_handlers()
+    
+    await application.bot.delete_webhook()
+    await application.bot.set_webhook(WEBHOOK_URL)
+    print(f"✅ Webhook установлен: {WEBHOOK_URL}")
+
+
+
     
 # if __name__ == "__main__":
 #     import asyncio

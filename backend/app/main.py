@@ -1,8 +1,9 @@
 import asyncio
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from telegram import Update
 from backend.app.api.chat import router as chat_router
 from backend.app.db.session import init_db
-from backend.app.services.telegram_bot import start_bot
+from backend.app.services.telegram_bot import start_bot, application
 from backend.app.routers.template_router import router as template_router
 from fastapi.middleware.cors import CORSMiddleware
 from backend.app.db.init_templates import init_templates
@@ -34,7 +35,12 @@ async def on_startup():
     init_templates()
     asyncio.create_task(start_bot())
 
-
+@app.post("/webhook")
+async def telegram_webhook(request: Request):
+    data = await request.json()
+    update = Update.de_json(data, application.bot)
+    await application.update_queue.put(update)
+    return {"status": "ok"}
 
 
 
