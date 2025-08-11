@@ -1,3 +1,4 @@
+import asyncio
 from fastapi import Depends
 from sqlalchemy.orm import Session
 import os 
@@ -104,7 +105,8 @@ async def start_bot():
     await application.bot.set_my_commands([
         ("start", "Запустить бота")
     ])
-    await application.run_polling()
+    await application.bot.delete_webhook(drop_pending_updates=True)
+    asyncio.create_task(application.run_polling(stop_signals=None))
 
     
     
