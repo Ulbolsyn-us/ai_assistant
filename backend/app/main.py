@@ -1,3 +1,4 @@
+import asyncio
 from fastapi import FastAPI
 from backend.app.api.chat import router as chat_router
 from backend.app.db.session import init_db
@@ -27,7 +28,7 @@ app.add_middleware(
 async def on_startup():
     init_db()
     init_templates()
-    await start_bot()
+    asyncio.create_task(start_bot)
 
 
 

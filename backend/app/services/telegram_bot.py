@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 import os 
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
+    Application,
     ApplicationBuilder, 
     ContextTypes, 
     MessageHandler, 
@@ -18,6 +19,8 @@ from backend.app.api.templates import get_template_by_name
 load_dotenv()
 
 BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+
+application = Application.builder().token("7812267584:AAG4185qlqGtNEFDkSlZKlszcVbSAhmd_Qo").build()
 
 
 # 🟡 Функция обработки входящих сообщений
@@ -95,17 +98,13 @@ async def handle_button_click(update: Update, context: ContextTypes.DEFAULT_TYPE
     # Здесь можно сохранить в БД таблицу подтверждений (если нужно)
     await query.edit_message_text("Спасибо, участие подтверждено!")
     
-def start_bot():
-    app = ApplicationBuilder().token(BOT_TOKEN).build()
-    
-    # Обработка текстовых сообщений
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
-    
-    # Обработка нажатий на inline-кнопки
-    app.add_handler(CallbackQueryHandler(handle_button_click))
+async def start_bot():
+    await application.initialize()
+    await application.start()
+    await application.updater.start_polling
     
     print("Telegram бот запущен")
-    app.run_polling()
+
     
     
 if __name__ == "__main__":
