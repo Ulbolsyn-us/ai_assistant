@@ -5,11 +5,9 @@ import os
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
     Application,
-    ApplicationBuilder, 
     CommandHandler,
     ContextTypes, 
     MessageHandler, 
-    CallbackQueryHandler, 
     filters) # обработчик сообщений (MessageHandler) / обработчик callback-кнопок (CallbackQueryHandler) — для ответа на нажатие.
 from dotenv import load_dotenv
 from backend.app.api.models import Message, InterviewInvite
