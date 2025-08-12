@@ -35,7 +35,10 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "Например: 'Хочу записаться на собеседование'."
     )
 
-async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE, db: Session = Depends(get_db)):
+async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    
+    db = next(get_db())
+    
     if update.message is None or update.message.text is None:
         return
     
@@ -89,7 +92,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE, db:
         
         await update.message.reply_text(bot_reply)
     
-async def handle_button_click(update: Update, context: ContextTypes.DEFAULT_TYPE, db: Session = Depends(get_db)):
+async def handle_button_click(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
     

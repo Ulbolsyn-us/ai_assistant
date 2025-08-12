@@ -1,8 +1,7 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException
 from backend.app.api.chat import get_db
 from backend.app.api.models import Template
 from sqlalchemy.orm import Session
-from backend.app.api.templates import update_template
 
 router = APIRouter()
 

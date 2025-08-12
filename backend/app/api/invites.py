@@ -1,7 +1,6 @@
-from fastapi import APIRouter, Query, Depends, HTTPException
+from fastapi import APIRouter, Query, HTTPException
 from fastapi.responses import StreamingResponse
 import csv
-from sqlalchemy.orm import Session
 from typing import Optional
 from datetime import datetime, timedelta
 from backend.app.api.models import InterviewInvite

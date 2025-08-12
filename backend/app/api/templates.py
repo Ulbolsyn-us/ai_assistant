@@ -1,5 +1,4 @@
-from fastapi import Depends
-from sqlalchemy.orm import Session
+
 from backend.app.db.session import get_db
 from backend.app.api.models import Template
 
@@ -9,7 +8,7 @@ def get_template_by_name(name: str) -> str:
     template = db.query(Template).filter_by(name=name).first()
     return template.content if template else ""
 
-def update_template(name: str, new_content: str, db: Session = Depends(get_db)) -> bool:
+def update_template(name: str, new_content: str) -> bool:
     template = db.query(Template).filter_by(name=name).first()
     db = next(get_db())
     if template:

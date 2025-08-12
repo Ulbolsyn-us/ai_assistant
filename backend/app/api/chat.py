@@ -1,7 +1,6 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 from backend.app.db.schemas import ChatRequest, ChatResponse
 from backend.app.services.gpt_utils import ask_gpt
-from sqlalchemy.orm import Session
 from backend.app.db.session import get_db
 from backend.app.api.models import Message
 from backend.app.services.nlp_utils import is_relevant_to_business
