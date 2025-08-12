@@ -21,7 +21,7 @@ load_dotenv()
 
 BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 WEBHOOK_URL = os.getenv("WEBHOOK_URL") 
-
+API_URL = os.getenv("API_URL", "https://ai-assistant-a7mq.onrender.com/chat")
 
 application = Application.builder().token(BOT_TOKEN).build()
 
@@ -78,7 +78,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE, db:
     
     async with httpx.AsyncClient(timeout=20.0) as client:
         response = await client.post(
-            "http://localhost:8000/chat",
+            API_URL,
             json={
                 "message": user_message,
                 "user_id": user_id
@@ -93,16 +93,12 @@ async def handle_button_click(update: Update, context: ContextTypes.DEFAULT_TYPE
     query = update.callback_query
     await query.answer()
     
-    user_id = str(query.from_user.id)
     print(f"Пользователь {user_id} подтвердил участие")
     
     # Сохраняем подтверждение в InterviewInvite
-    invite = InterviewInvite(
-        user_id=user_id,
-        interview_time="2025-06-26 15:00",
-        confirmed=True
-    )
-    db.add(invite)
+    db = next(get_db())
+    user_id = str(query.from_user.id)
+    db.add(InterviewInvite(user_id=user_id, interview_time="2025-06-26 15:00", confirmed=True))
     db.commit()
     
     # Здесь можно сохранить в БД таблицу подтверждений (если нужно)
@@ -112,34 +108,16 @@ application.add_handler(CommandHandler("start", start))
 application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 application.add_handler(CallbackQueryHandler(handle_button_click))
 
-# @router.post("/webhook")
-# async def telegram_webhook(request: Request):
-#     data = await request.json()
-#     update = Update.de_json(data, application.bot)
-#     await application.process_update(update)
-#     return {"ok": True}
 
 async def start_bot():
+    await application.initialize()
+    await application.start()
+    await application.bot.set_my_commands([
+        ("start", "Запустить бота")
+    ])
     await application.bot.set_webhook(url=WEBHOOK_URL)
-    print(f"✅ Webhook установлен: {WEBHOOK_URL}")
+    print("✅ Webhook установлен")
     
-# def setup_bot_handlers():
-#     application.add_handler(CommandHandler("start", start))
-#     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
-    
-# async def start_bot():
-#     setup_bot_handlers()
-    
-#     await application.bot.delete_webhook()
-#     await application.bot.set_webhook(WEBHOOK_URL)
-#     print(f"✅ Webhook установлен: {WEBHOOK_URL}")
 
-
-
-    
-# if __name__ == "__main__":
-#     import asyncio
-#     asyncio.run(start_bot())
-    
     
 print("✅ Бот стартует...")
