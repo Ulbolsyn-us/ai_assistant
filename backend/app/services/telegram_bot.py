@@ -1,12 +1,13 @@
-import asyncio
-from fastapi import Depends
+
+from fastapi import Depends, APIRouter, Request
 from sqlalchemy.orm import Session
 import os 
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
     Application,
     CommandHandler,
-    ContextTypes, 
+    ContextTypes,
+    CallbackQueryHandler, 
     MessageHandler, 
     filters) # обработчик сообщений (MessageHandler) / обработчик callback-кнопок (CallbackQueryHandler) — для ответа на нажатие.
 from dotenv import load_dotenv
@@ -21,6 +22,7 @@ load_dotenv()
 BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 WEBHOOK_URL = os.getenv("WEBHOOK_URL") 
 
+router = Application()
 application = Application.builder().token(BOT_TOKEN).build()
 
 
@@ -106,16 +108,31 @@ async def handle_button_click(update: Update, context: ContextTypes.DEFAULT_TYPE
     # Здесь можно сохранить в БД таблицу подтверждений (если нужно)
     await query.edit_message_text("Спасибо, участие подтверждено!")
     
-def setup_bot_handlers():
-    application.add_handler(CommandHandler("start", start))
-    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
-    
+application.add_handler(CommandHandler("start", start))
+application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
+application.add_handler(CallbackQueryHandler(handle_button_click))
+
+@router.post("/webhook")
+async def telegram_webhook(request: Request):
+    data = await request.json()
+    update = Update.de_json(data, application.bot)
+    await application.process_update(update)
+    return {"ok": True}
+
 async def start_bot():
-    setup_bot_handlers()
-    
-    await application.bot.delete_webhook()
-    await application.bot.set_webhook(WEBHOOK_URL)
+    await application.bot.set_webhook(url=WEBHOOK_URL)
     print(f"✅ Webhook установлен: {WEBHOOK_URL}")
+    
+# def setup_bot_handlers():
+#     application.add_handler(CommandHandler("start", start))
+#     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
+    
+# async def start_bot():
+#     setup_bot_handlers()
+    
+#     await application.bot.delete_webhook()
+#     await application.bot.set_webhook(WEBHOOK_URL)
+#     print(f"✅ Webhook установлен: {WEBHOOK_URL}")
 
 
 
