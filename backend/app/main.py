@@ -1,5 +1,7 @@
 
+import os
 from fastapi import FastAPI, Request
+import httpx
 from telegram import Update
 from backend.app.api.chat import router as chat_router
 from backend.app.db.session import init_db
@@ -43,15 +45,21 @@ async def telegram_webhook(request: Request):
     return {"status": "ok"}
 
 
-@app.get("/check_key")
-async def check_key():
-    import os
-    key = os.getenv("OPENROUTER_API_KEY")
-    if not key:
-        return {"status": "error", "message": "OPENROUTER_API_KEY не найден"}
-    return {
-        "status": "ok",
-        "key_preview": f"{key[:4]}...{key[-4:]}",
-        "length": len(key)
+@app.get("/test_openrouter")
+async def test_openrouter():
+    url = "https://openrouter.ai/api/v1/chat/completions"
+    headers = {
+        "Authorization": f"Bearer {os.getenv('OPENROUTER_API_KEY')}",
+        "HTTP-Referer": "https://your-site.com",
+        "X-Title": "Test API"
     }
-
+    data = {
+        "model": "mistralai/mistral-7b-instruct",
+        "messages": [
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": "Hello, can you respond?"}
+        ]
+    }
+    async with httpx.AsyncClient() as client:
+        r = await client.post(url, headers=headers, json=data)
+        return {"status": r.status_code, "response": r.text}
