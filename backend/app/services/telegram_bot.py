@@ -1,5 +1,5 @@
 
-from fastapi import Depends, APIRouter, Request
+from fastapi import Depends
 from sqlalchemy.orm import Session
 import os 
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
@@ -22,7 +22,7 @@ load_dotenv()
 BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 WEBHOOK_URL = os.getenv("WEBHOOK_URL") 
 
-router = Application()
+
 application = Application.builder().token(BOT_TOKEN).build()
 
 
@@ -112,12 +112,12 @@ application.add_handler(CommandHandler("start", start))
 application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 application.add_handler(CallbackQueryHandler(handle_button_click))
 
-@router.post("/webhook")
-async def telegram_webhook(request: Request):
-    data = await request.json()
-    update = Update.de_json(data, application.bot)
-    await application.process_update(update)
-    return {"ok": True}
+# @router.post("/webhook")
+# async def telegram_webhook(request: Request):
+#     data = await request.json()
+#     update = Update.de_json(data, application.bot)
+#     await application.process_update(update)
+#     return {"ok": True}
 
 async def start_bot():
     await application.bot.set_webhook(url=WEBHOOK_URL)
