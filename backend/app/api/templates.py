@@ -5,6 +5,7 @@ from backend.app.api.models import Template
 
 
 def get_template_by_name(name: str) -> str:
+    db = next(get_db())
     template = db.query(Template).filter_by(name=name).first()
     return template.content if template else ""
 
