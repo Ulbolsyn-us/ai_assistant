@@ -14,7 +14,6 @@ async def ask_gpt(message: str) -> str:
     url = "https://openrouter.ai/api/v1/chat/completions"
     headers = {
         "Authorization": f"Bearer {api_key}",
-        "HTTP-Referer": "https://ai-assistant-a7mq.onrender.com",
         "X-Title": "AI-Assistant Demo",
         "Content-Type": "application/json"
     }
