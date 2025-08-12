@@ -3,18 +3,23 @@ import axios from "axios";
 
 function MessageList() {
     const [ messages, setMessages ] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        async function fetchMessages() {
-            try {
-                const res = await axios.get(`${import.meta.env.VITE_API_URL}/messages`);
-                setMessages(res.data);
-            } catch (error) {
-                console.error("Ошибка при загрузке сообщений:", error);
-            }
-        }
         fetchMessages();
     }, []);
+
+    const fetchMessages = async () => {
+        try {
+            const res = await axios.get(`${import.meta.env.VITE_API_URL}/messages`);
+            setMessages(res.data);
+            setLoading(false);
+        } catch (err) {
+            console.error("Ошибка при получении сообщений:", err);
+        }
+    };
+
+    if (loading) return <p>Загрузка шаблонов...</p>
 
     return (
         <div className="m-12">
