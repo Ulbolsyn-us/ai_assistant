@@ -45,21 +45,3 @@ async def telegram_webhook(request: Request):
     return {"status": "ok"}
 
 
-@app.get("/test_openrouter")
-async def test_openrouter():
-    url = "https://openrouter.ai/api/v1/chat/completions"
-    headers = {
-        "Authorization": f"Bearer {os.getenv('OPENROUTER_API_KEY')}",
-        "HTTP-Referer": "https://your-site.com",
-        "X-Title": "Test API"
-    }
-    data = {
-        "model": "mistralai/mistral-7b-instruct",
-        "messages": [
-            {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": "Hello, can you respond?"}
-        ]
-    }
-    async with httpx.AsyncClient() as client:
-        r = await client.post(url, headers=headers, json=data)
-        return {"status": r.status_code, "response": r.text}
