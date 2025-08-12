@@ -19,7 +19,7 @@ function MessageList() {
         }
     };
 
-    if (loading) return <p>Загрузка шаблонов...</p>
+    if (loading) return <p>Загрузка сообщений...</p>
 
     return (
         <div className="m-12">

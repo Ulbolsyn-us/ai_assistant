@@ -36,7 +36,7 @@ async def chat(request: ChatRequest, db: Session = Depends(get_db)):
     
     
     needs_operator = should_escalate(reply)
-    forward_to_hr = is_relevant_to_business(request.message)
+    forward_to_hr = needs_operator and is_relevant_to_business(request.message)
     
     # 🔁 Если нужно передать оператору — заменяем ответ
     if needs_operator == True:
@@ -56,5 +56,17 @@ async def chat(request: ChatRequest, db: Session = Depends(get_db)):
 
 @router.get("/messages")
 def get_all_messages(db: Session = Depends(get_db)):
-    return db.query(Message.timestamp.desc()).all()
-
+    messages = db.query(Message).order_by(Message.timestamp.desc()).all()
+    return [
+        {
+            "id": m.id,
+            "user_id": m.user_id,
+            "user_message": m.user_message,
+            "bot_reply": m.bot_reply,
+            "timestamp": m.timestamp.isoformat(),
+            "needs_operator": m.needs_operator,
+            "forwarded_to_hr": m.forwarded_to_hr
+            
+        }
+        for m in messages
+    ]
