@@ -16,10 +16,10 @@ router = APIRouter()
 
 @router.get("/invites")
 def get_invites(
-    db: Session = Depends(get_db),
     user_id: Optional[str] = Query(None),
     date: Optional[str] = Query(None)
 ):
+    db = next(get_db())
     query = db.query(InterviewInvite)
     
     if user_id: 
@@ -50,7 +50,8 @@ def get_invites(
     ]
 
 @router.delete("/invites/{invite_id}")
-def delete_invite(invite_id: int, db: Session = Depends(get_db)):
+def delete_invite(invite_id: int):
+    db = next(get_db())
     invite = db.query(InterviewInvite).filter_by(id=invite_id).first()
     if not invite: 
         raise HTTPException(status_code=404, detail="Invite not found")
@@ -59,7 +60,8 @@ def delete_invite(invite_id: int, db: Session = Depends(get_db)):
     return {"message": "Invite deleted"}
 
 @router.get("/invites/export/csv")
-def export_invites_csv(db: Session = Depends(get_db)):
+def export_invites_csv():
+    db = next(get_db())
     invites = db.query(InterviewInvite).order_by(InterviewInvite.timestamp.desc()).all()
     output = StringIO()
     writer = csv.writer(output)

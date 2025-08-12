@@ -1,5 +1,5 @@
 from backend.app.api.models import Template
-from backend.app.db.session import SessionLocal
+from backend.app.db.session import get_db
 
 default_templates = {
     "needs_operator": "❗️Сейчас я передам ваш вопрос оператору. Ожидайте, пожалуйста.",
@@ -9,7 +9,7 @@ default_templates = {
 }
 
 def init_templates():
-    db = SessionLocal()
+    db = next(get_db())
     for name, content in default_templates.items():
         existing = db.query(Template).filter_by(name=name).first()
         if not existing:

@@ -7,8 +7,8 @@ router = APIRouter()
 
 @router.get("/hr-inbox")
 def get_hrinbox(
-    db: Session = Depends(get_db)
 ):
+    db = next(get_db())
     messages = db.query(Message).filter(Message.forwarded_to_hr == True).order_by(Message.timestamp.desc()).all()
     return [
         {

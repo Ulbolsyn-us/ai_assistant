@@ -7,7 +7,8 @@ from backend.app.api.templates import update_template
 router = APIRouter()
 
 @router.get("/templates")
-def get_templates(db: Session = Depends(get_db)):
+def get_templates():
+    db = next(get_db())
     templates = db.query(Template).all()
     return [
         {
@@ -19,7 +20,8 @@ def get_templates(db: Session = Depends(get_db)):
     ]
 
 @router.get("/templates/{template_key}")
-def get_template(template_key: str, db: Session = Depends(get_db)):
+def get_template(template_key: str):
+    db = next(get_db())
     template = db.query(Template).filter_by(name=template_key).first()
     if not template:
         raise HTTPException(status_code=404, detail="Template not found")
@@ -30,7 +32,8 @@ def get_template(template_key: str, db: Session = Depends(get_db)):
     }
 
 @router.put("/templates/{template_id}")
-def update_template(template_id: int, updated_template: dict, db: Session = Depends(get_db)):
+def update_template(template_id: int, updated_template: dict):
+    db = next(get_db())
     template = db.query(Template).filter_by(id=template_id).first()
     if not template:
         raise HTTPException(status_code=404, detail="Template not found")

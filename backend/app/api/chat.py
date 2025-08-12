@@ -24,7 +24,7 @@ def should_escalate(reply: str) -> bool:
     return too_generic 
 
 @router.post("/chat", response_model=ChatResponse)
-async def chat(request: ChatRequest, db: Session = Depends(get_db)):
+async def chat(request: ChatRequest):
     
     reply = await ask_gpt(request.message)
     
@@ -38,6 +38,7 @@ async def chat(request: ChatRequest, db: Session = Depends(get_db)):
     needs_operator = should_escalate(reply)
     forward_to_hr = needs_operator and is_relevant_to_business(request.message)
     
+    db = next(get_db())
     # 🔁 Если нужно передать оператору — заменяем ответ
     if needs_operator == True:
         reply = get_template_by_name("needs_operator")
@@ -55,7 +56,8 @@ async def chat(request: ChatRequest, db: Session = Depends(get_db)):
     return ChatResponse(reply=reply)
 
 @router.get("/messages")
-def get_all_messages(db: Session = Depends(get_db)):
+def get_all_messages():
+    db = next(get_db())
     messages = db.query(Message).order_by(Message.timestamp.desc()).all()
     return [
         {
