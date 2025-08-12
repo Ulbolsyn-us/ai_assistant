@@ -43,5 +43,15 @@ async def telegram_webhook(request: Request):
     return {"status": "ok"}
 
 
-
+@app.get("/check_key")
+async def check_key():
+    import os
+    key = os.getenv("OPENROUTER_API_KEY")
+    if not key:
+        return {"status": "error", "message": "OPENROUTER_API_KEY не найден"}
+    return {
+        "status": "ok",
+        "key_preview": f"{key[:4]}...{key[-4:]}",
+        "length": len(key)
+    }
 
