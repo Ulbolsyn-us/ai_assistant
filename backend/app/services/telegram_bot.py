@@ -96,8 +96,6 @@ async def handle_button_click(update: Update, context: ContextTypes.DEFAULT_TYPE
     query = update.callback_query
     await query.answer()
     
-    print(f"Пользователь {user_id} подтвердил участие")
-    
     # Сохраняем подтверждение в InterviewInvite
     user_id = str(query.from_user.id)
     db.add(InterviewInvite(user_id=user_id, interview_time="2025-06-26 15:00", confirmed=True))
