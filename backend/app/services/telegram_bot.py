@@ -1,5 +1,4 @@
 
-from fastapi import Depends
 from sqlalchemy.orm import Session
 import os 
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
@@ -93,13 +92,13 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(bot_reply)
     
 async def handle_button_click(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    db = next(get_db())
     query = update.callback_query
     await query.answer()
     
     print(f"Пользователь {user_id} подтвердил участие")
     
     # Сохраняем подтверждение в InterviewInvite
-    db = next(get_db())
     user_id = str(query.from_user.id)
     db.add(InterviewInvite(user_id=user_id, interview_time="2025-06-26 15:00", confirmed=True))
     db.commit()
